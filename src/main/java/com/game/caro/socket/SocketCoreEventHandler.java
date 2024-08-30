@@ -8,13 +8,15 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.DataListener;
 import com.game.caro.model.MessageDTO;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
 public class SocketCoreEventHandler {
 
     private final SocketIOServer server;
+
+    public SocketCoreEventHandler(SocketIOServer server) {
+        this.server = server;
+        this.server.addEventListener("create_room", MessageDTO.class, onCreateRoom);
+    }
 
     public DataListener<MessageDTO> onCreateRoom = new DataListener<MessageDTO>() {
         @Override

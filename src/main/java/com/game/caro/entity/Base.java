@@ -10,10 +10,11 @@ import lombok.Setter;
 @Setter
 public class Base {
     private UUID id;
+    private UUID sessionId;
     private Instant createdDate;
 
     public Base() {
-        this.id = UUID.randomUUID();
+        // this.id = UUID.randomUUID();
         this.createdDate = Instant.now();
     }
 }
