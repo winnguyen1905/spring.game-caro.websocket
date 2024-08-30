@@ -7,13 +7,14 @@ import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.server.RequestUpgradeStrategy;
 import org.springframework.web.socket.server.standard.TomcatRequestUpgradeStrategy;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
+
+import com.game.caro.interceptor.WebSocketTokenFilter;
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -27,10 +28,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         return new ThreadPoolTaskScheduler();
     }
 
+    @Bean
+    WebSocketTokenFilter webSocketTokenFilter() {
+        return new WebSocketTokenFilter();
+    }
+
     @Override
     public void configureClientInboundChannel(
-        ChannelRegistration registration, WebSocketTokenFilter webSocketTokenFilter) {
-        registration.interceptors(webSocketTokenFilter);
+        ChannelRegistration registration) {
+        registration.interceptors(webSocketTokenFilter());
     }
 
     @Override
@@ -49,6 +55,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .addEndpoint("/ws")
                 .setHandshakeHandler(new DefaultHandshakeHandler(upgradeStrategy))
                 .setAllowedOrigins(frontendCallerHost);
+
         // registry.addEndpoint("/ws");
         // registry.addEndpoint("/ws").withSockJS();
     }
