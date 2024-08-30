@@ -1,4 +1,4 @@
-package com.game.caro.gateway;
+package com.game.caro.controller;
 
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
