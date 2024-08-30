@@ -10,13 +10,11 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-@AllArgsConstructor
-public class User {
-    private UUID id;
+public class User extends Base {
     private String name;
 
     public User(String name) {
-        this.id = UUID.randomUUID();
+        super();
         this.name = name;
     }
 }

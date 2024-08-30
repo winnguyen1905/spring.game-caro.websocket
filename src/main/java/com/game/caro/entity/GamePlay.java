@@ -10,9 +10,13 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-@AllArgsConstructor
-public class GamePlay {
-    private UUID id;
+public class GamePlay extends Base {
     private Room room;
     private int[][] matrix;
+
+    public GamePlay(Room room, int[][] matrix) {
+        super();
+        this.room = room;
+        this.matrix = matrix;
+    }
 }

@@ -12,12 +12,13 @@ import lombok.Setter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class Record {
+public class Record extends Base {
     private UUID id;
     private GamePlay result;
     private User winner;
 
     public Record() {
+        super();
         this.id = UUID.randomUUID();
     }
 }

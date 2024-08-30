@@ -5,19 +5,21 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
+import com.game.caro.model.MessageDTO;
+
 @Controller
 public class MessageController {
 
-    @MessageMapping("/chat.sendMessage")
     @SendTo("/topic/public")
-    public ChatMessage sendMessage(ChatMessage chatMessage) {
-        return chatMessage;
+    @MessageMapping("/chat.sendMessage")
+    public MessageDTO sendMessage(MessageDTO MessageDTO) {
+        return MessageDTO;
     }
 
-    @MessageMapping("/chat.addUser")
     @SendTo("/topic/public")
-    public ChatMessage addUser(ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
-        headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
-        return chatMessage;
+    @MessageMapping("/chat.addUser")
+    public MessageDTO addUser(MessageDTO MessageDTO, SimpMessageHeaderAccessor headerAccessor) {
+        headerAccessor.getSessionAttributes().put("username", MessageDTO.getSender());
+        return MessageDTO;
     }
 }

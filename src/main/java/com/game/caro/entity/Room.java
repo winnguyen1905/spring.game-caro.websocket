@@ -13,14 +13,13 @@ import lombok.Setter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class Room {
-    private UUID id;
+public class Room extends Base {
     private User lead;
     private User guest;
     private List<User> blacklist;
 
     public Room() {
-        this.id = UUID.randomUUID();
+        super();
         this.blacklist = new ArrayList<>();
     }
 }
