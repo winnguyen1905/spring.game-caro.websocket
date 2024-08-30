@@ -4,58 +4,81 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+import com.corundumstudio.socketio.AckRequest;
+import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
 import com.game.caro.model.MessageDTO;
+import com.game.caro.model.MessageDTO;
 
-@Component
+@Service
 public class SocketServer {
 
     private final SocketIOServer server;
-    private final SocketFactory socketFactory;
 
-    public SocketServer(SocketIOServer server, SocketFactory socketFactory) {
+    public SocketServer(SocketIOServer server) {
         this.server = server;
-        this.socketFactory = socketFactory;
-        server.addConnectListener(onConnected());
-        server.addDisconnectListener(onDisconnected());
-        server.addEventListener("send_message", MessageDTO.class, onMessageReceived());
+        server.addConnectListener(onUserConnectWithSocket);
+        server.addDisconnectListener(onUserDisconnectWithSocket);
+        server.addEventListener("send_message", MessageDTO.class, onSendMessage);
     }
 
-    private DataListener<MessageDTO> onMessageReceived() {
-        return (socketIOClient, message, ackRequest) -> {
-            // Logger.info("message: " + message);
-            this.socketFactory.handleMessage(socketIOClient, message);
-        };
-    }
+    // Listen event `send_message`
+    public DataListener<MessageDTO> onSendMessage = new DataListener<MessageDTO>() {
+        @Override
+        public void onData(SocketIOClient client, MessageDTO message, AckRequest acknowledge) throws Exception {
 
-    private ConnectListener onConnected() {
-        return socketIOClient -> {
-            Map<String, List<String>> urlParams = socketIOClient.getHandshakeData().getUrlParams();
+            // 3 param is : event name, send to ?, content
+            server.getBroadcastOperations().sendEvent("event", client, message);
 
-            String room = String.join("", urlParams.get("room"));
-            String username = String.join("", urlParams.get("username"));
+            // đã nhận được tin nhắn ? 
+            acknowledge.sendAckData("Message send to target user successfully");
+        }
+    };
 
-            socketIOClient.joinRoom(room);
+    // active when have new connect
+    public ConnectListener onUserConnectWithSocket = new ConnectListener() {
+        @Override
+        public void onConnect(SocketIOClient client) {
+            System.out.println("onconnected " + client.getSessionId());
+        }
+    };
 
-            // socketFactory.saveInfoMessage(socketIOClient, "welcome " + username, room);
+    // active when have disconnect by any user
+    public DisconnectListener onUserDisconnectWithSocket = new DisconnectListener() {
+        @Override
+        public void onDisconnect(SocketIOClient client) {
+            System.out.println("disconnected " + client.getSessionId());
+        }
+    };
 
-            // log.info("connected: {} {} {}", socketIOClient.getSessionId(), room, username);
-        };
-    }
+    // private ConnectListener onConnected() {
+    //     return socketIOClient -> {
+    //         // Map<String, List<String>> urlParams = socketIOClient.getHandshakeData().getUrlParams();
+    //         // String room = String.join("", urlParams.get("room"));
+    //         // String username = String.join("", urlParams.get("username"));
+    //         System.out.println(socketIOClient.getSessionId());
+    //         // socketIOClient.joinRoom(room);
 
-    private DisconnectListener onDisconnected() {
-        return socketIOClient -> {
-            Map<String, List<String>> urlParams = socketIOClient.getHandshakeData().getUrlParams();
+    //         // socketFactory.saveInfoMessage(socketIOClient, "welcome " + username, room);
 
-            String room = String.join("", urlParams.get("room"));
-            String username = String.join("", urlParams.get("username"));
-            // socketFactory.saveInfoMessage(socketIOClient, "see you later " + username, room);
+    //         // log.info("connected: {} {} {}", socketIOClient.getSessionId(), room, username);
+    //     };
+    // }
 
-            // log.info("disconnected: {} {} {}", socketIOClient.getSessionId(), room, username);
-        };
-    }
+    // private DisconnectListener onDisconnected() {
+    //     return socketIOClient -> {
+    //         Map<String, List<String>> urlParams = socketIOClient.getHandshakeData().getUrlParams();
+
+    //         String room = String.join("", urlParams.get("room"));
+    //         String username = String.join("", urlParams.get("username"));
+    //         // socketFactory.saveInfoMessage(socketIOClient, "see you later " + username, room);
+
+    //         // log.info("disconnected: {} {} {}", socketIOClient.getSessionId(), room, username);
+    //     };
+    // }
 }

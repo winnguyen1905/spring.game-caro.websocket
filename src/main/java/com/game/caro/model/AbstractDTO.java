@@ -1,15 +1,14 @@
 package com.game.caro.model;
 
-import java.util.UUID;
-
-import com.game.caro.common.MessageType;
+import java.io.Serializable;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class AbstractDTO {
-    private MessageType type;
-    private UUID senderId;
+public class AbstractDTO implements Serializable {
+    private String action;
+    // private MessageType type;
+    // private UUID senderId;
 }
