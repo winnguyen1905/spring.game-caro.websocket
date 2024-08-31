@@ -9,6 +9,4 @@ import lombok.Setter;
 @Getter
 public class AbstractDTO implements Serializable {
     private String action;
-    // private MessageType type;
-    // private UUID senderId;
 }

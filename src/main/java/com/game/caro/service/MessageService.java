@@ -7,6 +7,6 @@ import com.game.caro.model.MessageDTO;
 
 @Service
 public class MessageService {
-    public void handleMessage(SocketIOClient socketIOClient, MessageDTO<?> message) {}
+    public void handleMessage(SocketIOClient socketIOClient, MessageDTO message) {}
 
 }

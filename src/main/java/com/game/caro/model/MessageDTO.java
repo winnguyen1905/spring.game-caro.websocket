@@ -1,10 +1,14 @@
 package com.game.caro.model;
 
+import java.util.UUID;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class MessageDTO<T> extends AbstractDTO {
-    private T payload;
+public class MessageDTO extends AbstractDTO {
+    private UUID senderId;
+    private UUID recieverId;
+    private String content;
 }

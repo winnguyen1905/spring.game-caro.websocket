@@ -1,4 +1,4 @@
-package com.game.caro.socket;
+package com.game.caro.gateway;
 
 import org.springframework.stereotype.Service;
 
@@ -16,16 +16,14 @@ public class SocketCoreEventHandler {
     public SocketCoreEventHandler(SocketIOServer server) {
         this.server = server;
         this.server.addEventListener("create_room", MessageDTO.class, onCreateRoom);
+        this.server.addEventListener("new_message", MessageDTO.class, onChat);
+        this.server.addEventListener("join_room", MessageDTO.class, onJoinRoom);
     }
 
     public DataListener<MessageDTO> onCreateRoom = new DataListener<MessageDTO>() {
         @Override
         public void onData(SocketIOClient client, MessageDTO message, AckRequest acknowledge) throws Exception {
-
-            // 3 param is : event name, send to ?, content
             server.getBroadcastOperations().sendEvent("event", client, "cc t nhan duoc roi");
-
-            // đã nhận được tin nhắn ? 
             acknowledge.sendAckData("Message send to target user successfully");
         }
     };
@@ -33,11 +31,7 @@ public class SocketCoreEventHandler {
     public DataListener<MessageDTO> onJoinRoom = new DataListener<MessageDTO>() {
         @Override
         public void onData(SocketIOClient client, MessageDTO message, AckRequest acknowledge) throws Exception {
-
-            // 3 param is : event name, send to ?, content
             server.getBroadcastOperations().sendEvent("event", client, "cc t nhan duoc roi");
-
-            // đã nhận được tin nhắn ? 
             acknowledge.sendAckData("Message send to target user successfully");
         }
     };
