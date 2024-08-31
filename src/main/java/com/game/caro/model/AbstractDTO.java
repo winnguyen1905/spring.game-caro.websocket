@@ -7,6 +7,5 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class AbstractDTO implements Serializable {
-    private String action;
+public abstract class AbstractDTO implements Serializable {
 }

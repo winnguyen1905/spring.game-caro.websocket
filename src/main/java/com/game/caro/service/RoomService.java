@@ -12,6 +12,7 @@ import com.game.caro.model.MessageDTO;
 
 @Service
 public class RoomService {
-    public static Map<UUID, Room> users = new HashMap<>();
+    public static Map<UUID, Room> rooms = new HashMap<>();
+    public static Map<UUID, UUID> UserIdMapRoomId = new HashMap<>();
     public void handleMessage(SocketIOClient socketIOClient, MessageDTO message) {}
 }

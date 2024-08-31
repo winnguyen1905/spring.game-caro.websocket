@@ -9,7 +9,6 @@ import lombok.Setter;
 
 @Setter
 @Getter
-@Builder
 public class User extends Base {
     private String name;
 
